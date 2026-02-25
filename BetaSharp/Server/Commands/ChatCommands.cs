@@ -13,7 +13,7 @@ public static class ChatCommands
 
         string message = string.Join(" ", args);
         logger.info("[" + senderName + "] " + message);
-        server.playerManager.sendToAll(new ChatMessagePacket("§d[Server] " + message));
+        server.playerManager.SendToAll(new ChatMessagePacket("§d[Server] " + message));
     }
 
     public static void Tell(MinecraftServer server, string senderName, string[] args, CommandOutput output)

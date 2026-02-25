@@ -32,7 +32,7 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
     public bool skipPacketSlotUpdates;
 
 
-    public ServerPlayerEntity(MinecraftServer server, World world, String name, ServerPlayerInteractionManager interactionManager) : base(world)
+    public ServerPlayerEntity(MinecraftServer server, World world, string name, ServerPlayerInteractionManager interactionManager) : base(world)
     {
         interactionManager.player = this;
         this.interactionManager = interactionManager;

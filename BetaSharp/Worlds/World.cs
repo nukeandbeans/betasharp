@@ -2180,7 +2180,7 @@ public abstract class World : BlockView
 
     }
 
-    public void allowSpawning(bool allowMonsterSpawning, bool allowMobSpawning)
+    public void AllowSpawning(bool allowMonsterSpawning, bool allowMobSpawning)
     {
         spawnHostileMobs = allowMonsterSpawning;
         spawnPeacefulMobs = allowMobSpawning;

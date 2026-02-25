@@ -60,7 +60,7 @@ public class ServerPlayNetworkHandler : NetHandler, CommandOutput
         player.onDisconnect();
         sendPacket(new DisconnectPacket(reason));
         connection.disconnect();
-        server.playerManager.sendToAll(new ChatMessagePacket("§e" + player.name + " left the game."));
+        server.playerManager.SendToAll(new ChatMessagePacket("§e" + player.name + " left the game."));
         server.playerManager.disconnect(player);
         disconnected = true;
     }
@@ -429,7 +429,7 @@ public class ServerPlayNetworkHandler : NetHandler, CommandOutput
     public override void onDisconnected(string reason, object[]? objects)
     {
         _logger.LogInformation($"{player.name} lost connection: {reason}");
-        server.playerManager.sendToAll(new ChatMessagePacket("§e" + player.name + " left the game."));
+        server.playerManager.SendToAll(new ChatMessagePacket("§e" + player.name + " left the game."));
         server.playerManager.disconnect(player);
         disconnected = true;
     }
@@ -492,7 +492,7 @@ public class ServerPlayNetworkHandler : NetHandler, CommandOutput
             {
                 var2 = "<" + player.name + "> " + var2;
                 _logger.LogInformation(var2);
-                server.playerManager.sendToAll(new ChatMessagePacket(var2));
+                server.playerManager.SendToAll(new ChatMessagePacket(var2));
             }
         }
     }
@@ -503,7 +503,7 @@ public class ServerPlayNetworkHandler : NetHandler, CommandOutput
         {
             string emote = "* " + player.name + " " + message[message.IndexOf(" ")..].Trim();
             _logger.LogInformation(emote);
-            server.playerManager.sendToAll(new ChatMessagePacket(emote));
+            server.playerManager.SendToAll(new ChatMessagePacket(emote));
         }
         else if (server is InternalServer || server.playerManager.isOperator(player.name))
         {

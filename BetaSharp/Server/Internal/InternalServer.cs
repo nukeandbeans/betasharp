@@ -44,7 +44,7 @@ public class InternalServer : MinecraftServer
                 if (worlds[i] != null)
                 {
                     worlds[i].difficulty = _initialDifficulty;
-                    worlds[i].allowSpawning(_initialDifficulty > 0, true);
+                    worlds[i].AllowSpawning(_initialDifficulty > 0, true);
                 }
             }
 
@@ -53,9 +53,9 @@ public class InternalServer : MinecraftServer
         return result;
     }
 
-    public override java.io.File getFile(string path)
+    public override FileInfo GetFile(string path)
     {
-        return new(System.IO.Path.Combine(_worldPath, path));
+        return new FileInfo(System.IO.Path.Combine(_worldPath, path));
     }
 
     public void SetDifficulty(int difficulty)
@@ -70,7 +70,7 @@ public class InternalServer : MinecraftServer
                     if (worlds[i] != null)
                     {
                         worlds[i].difficulty = difficulty;
-                        worlds[i].allowSpawning(difficulty > 0, true);
+                        worlds[i].AllowSpawning(difficulty > 0, true);
                     }
                 }
 
@@ -83,7 +83,7 @@ public class InternalServer : MinecraftServer
                     _ => "Unknown"
                 };
 
-                playerManager?.sendToAll(new BetaSharp.Network.Packets.Play.ChatMessagePacket($"Difficulty set to {difficultyName}"));
+                playerManager?.SendToAll(new BetaSharp.Network.Packets.Play.ChatMessagePacket($"Difficulty set to {difficultyName}"));
             }
         }
     }

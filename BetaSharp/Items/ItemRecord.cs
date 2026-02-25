@@ -7,9 +7,9 @@ namespace BetaSharp.Items;
 public class ItemRecord : Item
 {
 
-    public readonly String recordName;
+    public readonly string recordName;
 
-    public ItemRecord(int id, String recordName) : base(id)
+    public ItemRecord(int id, string recordName) : base(id)
     {
         this.recordName = recordName;
         maxCount = 1;

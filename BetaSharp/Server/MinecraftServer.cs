@@ -101,7 +101,7 @@ public abstract class MinecraftServer : Runnable, CommandOutput
         }
 
         _logger.LogInformation($"Preparing level \"{worldName}\"");
-        loadWorld(new RegionWorldStorageSource(getFile(".").getAbsolutePath()), worldName, seed);
+        loadWorld(new RegionWorldStorageSource(GetFile(".").Name), worldName, seed);
 
         if (logHelp)
         {
@@ -114,7 +114,7 @@ public abstract class MinecraftServer : Runnable, CommandOutput
     private void loadWorld(IWorldStorageSource storageSource, string worldDir, long seed)
     {
         worlds = new ServerWorld[2];
-        RegionWorldStorage worldStorage = new RegionWorldStorage(getFile(".").getAbsolutePath(), worldDir, true);
+        RegionWorldStorage worldStorage = new RegionWorldStorage(GetFile(".").Name, worldDir, true);
 
         for (int i = 0; i < worlds.Length; i++)
         {
@@ -129,7 +129,7 @@ public abstract class MinecraftServer : Runnable, CommandOutput
 
             worlds[i].addWorldAccess(new ServerWorldEventListener(this, worlds[i]));
             worlds[i].difficulty = config.GetSpawnMonsters(true) ? 1 : 0;
-            worlds[i].allowSpawning(config.GetSpawnMonsters(true), spawnAnimals);
+            worlds[i].AllowSpawning(config.GetSpawnMonsters(true), spawnAnimals);
             playerManager.saveAllPlayers(worlds);
         }
 
@@ -436,7 +436,7 @@ public abstract class MinecraftServer : Runnable, CommandOutput
         }
     }
 
-    public abstract java.io.File getFile(string path);
+    public abstract FileInfo GetFile(string path);
 
     public void SendMessage(string message)
     {

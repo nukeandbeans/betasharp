@@ -40,17 +40,17 @@ public class EntitySquid : EntityWaterMob
         base.readNbt(nbt);
     }
 
-    protected override String getLivingSound()
+    protected override string getLivingSound()
     {
         return null;
     }
 
-    protected override String getHurtSound()
+    protected override string getHurtSound()
     {
         return null;
     }
 
-    protected override String getDeathSound()
+    protected override string getDeathSound()
     {
         return null;
     }

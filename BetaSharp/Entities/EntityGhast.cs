@@ -159,17 +159,17 @@ public class EntityGhast : EntityFlying, Monster
         return true;
     }
 
-    protected override String getLivingSound()
+    protected override string getLivingSound()
     {
         return "mob.ghast.moan";
     }
 
-    protected override String getHurtSound()
+    protected override string getHurtSound()
     {
         return "mob.ghast.scream";
     }
 
-    protected override String getDeathSound()
+    protected override string getDeathSound()
     {
         return "mob.ghast.death";
     }

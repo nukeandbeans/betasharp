@@ -47,7 +47,7 @@ public class ServerWorldEventListener : IWorldAccess
         server.playerManager.markDirty(x, y, z, world.dimension.Id);
     }
 
-    public void playStreaming(String stream, int x, int y, int z)
+    public void playStreaming(string stream, int x, int y, int z)
     {
     }
 

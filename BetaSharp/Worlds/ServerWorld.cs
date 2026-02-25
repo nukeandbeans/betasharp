@@ -20,7 +20,7 @@ public class ServerWorld : World
     private readonly MinecraftServer server;
     private readonly Dictionary<int, Entity> entitiesById = [];
 
-    public ServerWorld(MinecraftServer server, IWorldStorage storage, String name, int dimensionId, long seed) : base(storage, name, seed, Dimension.FromId(dimensionId))
+    public ServerWorld(MinecraftServer server, IWorldStorage storage, string name, int dimensionId, long seed) : base(storage, name, seed, Dimension.FromId(dimensionId))
     {
         this.server = server;
     }
@@ -156,11 +156,11 @@ public class ServerWorld : World
         {
             if (var1)
             {
-                server.playerManager.sendToAll(new GameStateChangeS2CPacket(2));
+                server.playerManager.SendToAll(new GameStateChangeS2CPacket(2));
             }
             else
             {
-                server.playerManager.sendToAll(new GameStateChangeS2CPacket(1));
+                server.playerManager.SendToAll(new GameStateChangeS2CPacket(1));
             }
         }
     }

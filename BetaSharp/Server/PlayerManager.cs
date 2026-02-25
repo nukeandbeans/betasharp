@@ -284,7 +284,7 @@ public class PlayerManager
         GetChunkMap(dimensionId).markBlockForUpdate(x, y, z);
     }
 
-    public void sendToAll(Packet packet)
+    public void SendToAll(Packet packet)
     {
         for (int var2 = 0; var2 < players.Count; var2++)
         {
@@ -325,68 +325,68 @@ public class PlayerManager
     public void banPlayer(string name)
     {
         bannedPlayers.Add(name.ToLower());
-        saveBannedPlayers();
+        SaveBannedPlayers();
     }
 
     public void unbanPlayer(string name)
     {
         bannedPlayers.Remove(name.ToLower());
-        saveBannedPlayers();
+        SaveBannedPlayers();
     }
 
-    protected virtual void loadBannedPlayers()
+    protected virtual void LoadBannedPlayers()
     {
     }
 
-    protected virtual void saveBannedPlayers()
+    protected virtual void SaveBannedPlayers()
     {
     }
 
     public void banIp(string ip)
     {
         bannedIps.Add(ip.ToLower());
-        saveBannedIps();
+        SaveBannedIps();
     }
 
     public void unbanIp(string ip)
     {
         bannedIps.Remove(ip.ToLower());
-        saveBannedIps();
+        SaveBannedIps();
     }
 
-    protected virtual void loadBannedIps()
+    protected virtual void LoadBannedIps()
     {
     }
 
-    protected virtual void saveBannedIps()
+    protected virtual void SaveBannedIps()
     {
     }
 
     public void addToOperators(string name)
     {
         ops.Add(name.ToLower());
-        saveOperators();
+        SaveOperators();
     }
 
     public void removeFromOperators(string name)
     {
         ops.Remove(name.ToLower());
-        saveOperators();
+        SaveOperators();
     }
 
-    protected virtual void loadOperators()
+    protected virtual void LoadOperators()
     {
     }
 
-    protected virtual void saveOperators()
+    protected virtual void SaveOperators()
     {
     }
 
-    protected virtual void loadWhitelist()
+    protected virtual void LoadWhitelist()
     {
     }
 
-    protected virtual void saveWhitelist()
+    protected virtual void SaveWhitelist()
     {
     }
 
@@ -490,13 +490,13 @@ public class PlayerManager
     public void addToWhitelist(string name)
     {
         whitelist.Add(name);
-        saveWhitelist();
+        SaveWhitelist();
     }
 
     public void removeFromWhitelist(string name)
     {
         whitelist.Remove(name);
-        saveWhitelist();
+        SaveWhitelist();
     }
 
     public HashSet<string> getWhitelist()
@@ -506,7 +506,7 @@ public class PlayerManager
 
     public void reloadWhitelist()
     {
-        loadWhitelist();
+        LoadWhitelist();
     }
 
     public void sendWorldInfo(ServerPlayerEntity player, ServerWorld world)

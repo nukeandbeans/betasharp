@@ -21,7 +21,7 @@ public class ItemCloth : ItemBlock
         return meta;
     }
 
-    public override String getItemNameIS(ItemStack itemStack)
+    public override string getItemNameIS(ItemStack itemStack)
     {
         return base.getItemName() + "." + ItemDye.DyeColorNames[BlockCloth.getBlockMeta(itemStack.getDamage())];
     }

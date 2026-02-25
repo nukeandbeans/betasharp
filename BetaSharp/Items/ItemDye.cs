@@ -7,7 +7,7 @@ namespace BetaSharp.Items;
 public class ItemDye : Item
 {
 
-    public static readonly String[] DyeColorNames =
+    public static readonly string[] DyeColorNames =
     [
         "black",
         "red",
@@ -57,7 +57,7 @@ public class ItemDye : Item
         return textureId + meta % 8 * 16 + meta / 8;
     }
 
-    public override String getItemNameIS(ItemStack itemStack)
+    public override string getItemNameIS(ItemStack itemStack)
     {
         return base.getItemName() + "." + DyeColorNames[itemStack.getDamage()];
     }

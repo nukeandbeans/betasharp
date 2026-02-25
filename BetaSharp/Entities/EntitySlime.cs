@@ -148,12 +148,12 @@ public class EntitySlime : EntityLiving, Monster
 
     }
 
-    protected override String getHurtSound()
+    protected override string getHurtSound()
     {
         return "mob.slime";
     }
 
-    protected override String getDeathSound()
+    protected override string getDeathSound()
     {
         return "mob.slime";
     }

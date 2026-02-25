@@ -27,17 +27,17 @@ public class EntityZombie : EntityMonster
         base.tickMovement();
     }
 
-    protected override String getLivingSound()
+    protected override string getLivingSound()
     {
         return "mob.zombie";
     }
 
-    protected override String getHurtSound()
+    protected override string getHurtSound()
     {
         return "mob.zombiehurt";
     }
 
-    protected override String getDeathSound()
+    protected override string getDeathSound()
     {
         return "mob.zombiedeath";
     }

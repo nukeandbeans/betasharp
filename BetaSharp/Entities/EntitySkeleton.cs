@@ -14,17 +14,17 @@ public class EntitySkeleton : EntityMonster
         texture = "/mob/skeleton.png";
     }
 
-    protected override String getLivingSound()
+    protected override string getLivingSound()
     {
         return "mob.skeleton";
     }
 
-    protected override String getHurtSound()
+    protected override string getHurtSound()
     {
         return "mob.skeletonhurt";
     }
 
-    protected override String getDeathSound()
+    protected override string getDeathSound()
     {
         return "mob.skeletonhurt";
     }

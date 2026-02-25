@@ -13,7 +13,7 @@ public class OpenScreenS2CPacket : Packet
     {
     }
 
-    public OpenScreenS2CPacket(int syncId, int screenHandlerId, String name, int size)
+    public OpenScreenS2CPacket(int syncId, int screenHandlerId, string name, int size)
     {
         this.syncId = syncId;
         this.screenHandlerId = screenHandlerId;

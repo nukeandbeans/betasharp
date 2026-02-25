@@ -51,7 +51,7 @@ public class BlockJukeBox : BlockWithEntity
             if (recordId != 0)
             {
                 world.worldEvent(1005, x, y, z, 0);
-                world.playStreaming((String)null, x, y, z);
+                world.playStreaming((string)null, x, y, z);
                 jukebox.recordId = 0;
                 jukebox.markDirty();
                 world.setBlockMeta(x, y, z, 0);

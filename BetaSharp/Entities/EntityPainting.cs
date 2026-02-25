@@ -47,7 +47,7 @@ public class EntityPainting : Entity
         setFacing(direction);
     }
 
-    public EntityPainting(World world, int x, int y, int z, int direction, String title) : this(world)
+    public EntityPainting(World world, int x, int y, int z, int direction, string title) : this(world)
     {
         xPosition = x;
         yPosition = y;
@@ -263,7 +263,7 @@ public class EntityPainting : Entity
         xPosition = nbt.GetInteger("TileX");
         yPosition = nbt.GetInteger("TileY");
         zPosition = nbt.GetInteger("TileZ");
-        String motiveTitle = nbt.GetString("Motive");
+        string motiveTitle = nbt.GetString("Motive");
         EnumArt[] allArt = EnumArt.values;
         int artCount = allArt.Length;
 

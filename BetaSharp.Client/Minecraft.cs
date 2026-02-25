@@ -1233,7 +1233,7 @@ public partial class Minecraft
             Profiler.PushGroup("theWorld.tick");
             if (!isGamePaused || (isMultiplayerWorld() && internalServer == null))
             {
-                world.allowSpawning(options.Difficulty > 0, true);
+                world.AllowSpawning(options.Difficulty > 0, true);
                 world.Tick();
             }
 

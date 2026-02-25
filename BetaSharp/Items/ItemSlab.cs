@@ -21,7 +21,7 @@ public class ItemSlab : ItemBlock
         return meta;
     }
 
-    public override String getItemNameIS(ItemStack itemStack)
+    public override string getItemNameIS(ItemStack itemStack)
     {
         if(BlockSlab.names.Length > itemStack.getDamage())
             return base.getItemName() + "." + BlockSlab.names[itemStack.getDamage()];

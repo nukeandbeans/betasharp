@@ -85,17 +85,17 @@ public class EntityPigZombie : EntityZombie
         randomSoundDelay = random.NextInt(40);
     }
 
-    protected override String getLivingSound()
+    protected override string getLivingSound()
     {
         return "mob.zombiepig.zpig";
     }
 
-    protected override String getHurtSound()
+    protected override string getHurtSound()
     {
         return "mob.zombiepig.zpighurt";
     }
 
-    protected override String getDeathSound()
+    protected override string getDeathSound()
     {
         return "mob.zombiepig.zpigdeath";
     }
