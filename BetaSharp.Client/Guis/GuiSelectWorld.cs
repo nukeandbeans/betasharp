@@ -1,4 +1,5 @@
-﻿using BetaSharp.Client.Input;
+using BetaSharp.Client.Input;
+using BetaSharp.Stats;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Storage;
 using java.text;
@@ -132,6 +133,7 @@ public class GuiSelectWorld : GuiScreen
         if (!selected)
         {
             selected = true;
+            mc.statFileWriter.ReadStat(Stats.Stats.LoadWorldStat, 1);
             mc.playerController = new PlayerControllerSP(mc);
             string worldFileName = getSaveFileName(worldIndex);
             worldFileName ??= "World" + worldIndex;
@@ -166,7 +168,7 @@ public class GuiSelectWorld : GuiScreen
     public override void Render(int mouseX, int mouseY, float partialTicks)
     {
         worldSlotContainer.DrawScreen(mouseX, mouseY, partialTicks);
-        DrawCenteredString(FontRenderer, screenTitle, Width / 2, 20, 0xFFFFFF);
+        DrawCenteredString(FontRenderer, screenTitle, Width / 2, 20, Color.White);
         base.Render(mouseX, mouseY, partialTicks);
     }
 

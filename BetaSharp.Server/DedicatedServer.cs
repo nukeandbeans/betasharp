@@ -1,13 +1,14 @@
+using System.Net;
+using System.Net.Sockets;
 using BetaSharp.Server.Network;
 using BetaSharp.Server.Threading;
 using java.lang;
-using java.net;
 using Microsoft.Extensions.Logging;
 using Exception = System.Exception;
 
 namespace BetaSharp.Server;
 
-public class DedicatedServer(IServerConfiguration config) : MinecraftServer(config)
+internal class DedicatedServer(IServerConfiguration config) : MinecraftServer(config)
 {
     private static readonly ILogger<DedicatedServer> s_logger = Log.Instance.For<DedicatedServer>();
 
@@ -18,12 +19,11 @@ public class DedicatedServer(IServerConfiguration config) : MinecraftServer(conf
 
     protected override bool Init()
     {
-        ConsoleInputThread var1 = new( this );
+        ConsoleInputThread var1 = new(this);
         var1.setDaemon(true);
         var1.start();
 
         s_logger.LogInformation("Starting minecraft server version Beta 1.7.3");
-
         if (Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L)
         {
             s_logger.LogWarning("**** NOT ENOUGH RAM!");
@@ -32,60 +32,62 @@ public class DedicatedServer(IServerConfiguration config) : MinecraftServer(conf
 
         s_logger.LogInformation("Loading properties");
 
-        string ip = config.GetServerIp("");
-        InetAddress address = null;
+        string addressInput = config.GetServerIp("");
 
-        if (ip.Length > 0)
+        bool dualStack = config.GetDualStack(false);
+
+        var address = dualStack ? IPAddress.IPv6Any : IPAddress.Any;
+
+        if (addressInput.Length > 0)
         {
-            address = InetAddress.getByName(ip);
+            address = Dns.GetHostAddresses(addressInput)[0];
         }
 
         int port = config.GetServerPort(25565);
-        s_logger.LogInformation("Starting Minecraft server on {Ip}:{Port}", ip.Length == 0 ? "*" : ip, port);
+        s_logger.LogInformation($"Starting Minecraft server on {(addressInput.Length == 0 ? "*" : addressInput)}:{port}");
 
         try
         {
-            connections = new ConnectionListener(this, address, port);
+            connections = new ConnectionListener(this, address, port, dualStack);
         }
-        catch (java.io.IOException exception)
+        catch (java.io.IOException ex)
         {
             s_logger.LogWarning("**** FAILED TO BIND TO PORT!");
-            s_logger.LogWarning("The exception was: {Exception}", exception);
+            s_logger.LogWarning($"The exception was: {ex}");
             s_logger.LogWarning("Perhaps a server is already running on that port?");
-
             return false;
         }
 
         if (!onlineMode)
         {
             s_logger.LogWarning("**** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!");
-            s_logger.LogWarning("The server will make no attempt to authenticate usernames. Beware");
-            s_logger.LogWarning("While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose");
-            s_logger.LogWarning("To change this, set \"online-mode\" to \"true\" in the server.settings file");
+            s_logger.LogWarning("The server will make no attempt to authenticate usernames. Beware.");
+            s_logger.LogWarning("While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.");
+            s_logger.LogWarning("To change this, set \"online-mode\" to \"true\" in the server.settings file.");
         }
 
         return base.Init();
     }
 
-    public static void Main(string[] _)
+    public static void Main(string[] args)
     {
         Log.Instance.Initialize(Directory.GetCurrentDirectory());
 
         try
         {
-            DedicatedServerConfiguration config = new( new java.io.File("server.properties") );
-            DedicatedServer server = new( config );
+            DedicatedServerConfiguration config = new(new java.io.File("server.properties"));
+            DedicatedServer server = new(config);
 
             new RunServerThread(server, "Server thread").start();
         }
-        catch (Exception exception)
+        catch (Exception e)
         {
-            s_logger.LogError("Failed to start the minecraft server: {Exception}", exception);
+            s_logger.LogError($"Failed to start the minecraft server: {e}");
         }
     }
 
-    public override FileInfo GetFile(string path)
+    public override java.io.File getFile(string path)
     {
-        return new FileInfo(path);
+        return new java.io.File(path);
     }
 }

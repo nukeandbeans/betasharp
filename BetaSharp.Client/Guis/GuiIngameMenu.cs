@@ -44,6 +44,7 @@ public class GuiIngameMenu : GuiScreen
 
             mc.stopInternalServer();
             mc.changeWorld(null);
+            mc.options.ShowDebugInfo = false;
             mc.displayGuiScreen(new GuiMainMenu());
         }
 
@@ -81,10 +82,10 @@ public class GuiIngameMenu : GuiScreen
             float pulse = (_menuTickCounter % 10 + partialTick) / 10.0F;
             pulse = MathHelper.Sin(pulse * (float)Math.PI * 2.0F) * 0.2F + 0.8F;
             int color = (int)(255.0F * pulse);
-            DrawString(FontRenderer, "Saving level..", 8, Height - 16, (uint)(color << 16 | color << 8 | color));
+            DrawString(FontRenderer, "Saving level..", 8, Height - 16, Color.FromRgb((uint)(color << 16 | color << 8 | color)));
         }
 
-        DrawCenteredString(FontRenderer, "Game menu", Width / 2, 40, 0xFFFFFF);
+        DrawCenteredString(FontRenderer, "Game menu", Width / 2, 40, Color.White);
         base.Render(mouseX, mouseY, partialTick);
     }
 }

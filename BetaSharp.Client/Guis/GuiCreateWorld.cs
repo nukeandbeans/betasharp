@@ -1,4 +1,5 @@
 using BetaSharp.Client.Input;
+using BetaSharp.Stats;
 using BetaSharp.Util;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Storage;
@@ -126,6 +127,7 @@ public class GuiCreateWorld : GuiScreen
                             }
                         }
 
+                        mc.statFileWriter.ReadStat(Stats.Stats.CreateWorldStat, 1);
                         mc.playerController = new PlayerControllerSP(mc);
                         mc.startWorld(_folderName, _textboxWorldName.GetText(), worldSeed);
                         break;
@@ -169,11 +171,11 @@ public class GuiCreateWorld : GuiScreen
         int centerY = Height / 4;
 
         DrawDefaultBackground();
-        DrawCenteredString(FontRenderer, translations.TranslateKey("selectWorld.create"), centerX, centerY - 60 + 20, 0xFFFFFF);
-        DrawString(FontRenderer, translations.TranslateKey("selectWorld.enterName"), centerX - 100, centerY - 10, 0xA0A0A0);
-        DrawString(FontRenderer, $"{translations.TranslateKey("selectWorld.resultFolder")} {_folderName}", centerX - 100, centerY + 24, 0xA0A0A0);
-        DrawString(FontRenderer, translations.TranslateKey("selectWorld.enterSeed"), centerX - 100, centerY + 56 - 12, 0xA0A0A0);
-        DrawString(FontRenderer, translations.TranslateKey("selectWorld.seedInfo"), centerX - 100, centerY + 56 + 24, 0xA0A0A0);
+        DrawCenteredString(FontRenderer, translations.TranslateKey("selectWorld.create"), centerX, centerY - 60 + 20, Color.White);
+        DrawString(FontRenderer, translations.TranslateKey("selectWorld.enterName"), centerX - 100, centerY - 10, Color.GrayA0);
+        DrawString(FontRenderer, $"{translations.TranslateKey("selectWorld.resultFolder")} {_folderName}", centerX - 100, centerY + 24, Color.GrayA0);
+        DrawString(FontRenderer, translations.TranslateKey("selectWorld.enterSeed"), centerX - 100, centerY + 56 - 12, Color.GrayA0);
+        DrawString(FontRenderer, translations.TranslateKey("selectWorld.seedInfo"), centerX - 100, centerY + 56 + 24, Color.GrayA0);
         _textboxWorldName.DrawTextBox();
         _textboxSeed.DrawTextBox();
         base.Render(mouseX, mouseY, partialTicks);
