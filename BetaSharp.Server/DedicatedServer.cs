@@ -77,8 +77,8 @@ internal class DedicatedServer(IServerConfiguration config) : MinecraftServer(co
 
         try
         {
+            DedicatedServerConfiguration config = new(new FileInfo("server.properties"));
             DedicatedServer server = new(config);
-            DedicatedServerConfiguration config = new( new FileInfo("server.properties") );
 
             new RunServerThread(server, "Server thread").start();
         }
