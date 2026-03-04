@@ -25,7 +25,7 @@ public class ConnectionListener
         this.server = server;
 
         Socket = new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp) { NoDelay = true };
-        Socket.DualMode = dualStack;
+        //Socket.DualMode = true;
         Socket.Bind(new IPEndPoint(address, port));
         Socket.Listen();
 

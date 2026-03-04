@@ -33,7 +33,7 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
     private int screenHandlerSyncId;
     public bool skipPacketSlotUpdates;
 
-    public ServerPlayerEntity(MinecraftServer server, World world, String name, ServerPlayerInteractionManager interactionManager) : base(world)
+    public ServerPlayerEntity(MinecraftServer server, World world, string name, ServerPlayerInteractionManager interactionManager) : base(world)
     {
         interactionManager.player = this;
         this.interactionManager = interactionManager;
@@ -41,6 +41,7 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
         int x = spawnPos.X;
         int y = spawnPos.Z;
         int z = spawnPos.Y;
+
         if (!world.dimension.HasCeiling)
         {
             x += random.NextInt(20) - 10;
@@ -54,7 +55,6 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
         this.name = name;
         standingEyeHeight = 0.0F;
     }
-
 
     public override void setWorld(World world)
     {
@@ -78,7 +78,6 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
         standingEyeHeight = 0.0F;
     }
 
-
     public override float getEyeHeight()
     {
         return 1.62F;
@@ -93,6 +92,7 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
         for (int i = 0; i < 5; i++)
         {
             ItemStack itemStack = getEquipment(i);
+
             if (itemStack != equipment[i])
             {
                 server.getEntityTracker(dimensionId).sendToListeners(this, new EntityEquipmentUpdateS2CPacket(id, i, itemStack));
@@ -146,9 +146,11 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
         for (int slotIndex = 0; slotIndex < inventory.size(); slotIndex++)
         {
             ItemStack itemStack = inventory.getStack(slotIndex);
+
             if (itemStack != null && Item.ITEMS[itemStack.itemId].isNetworkSynced() && networkHandler.getBlockDataSendQueueSize() <= 2)
             {
                 Packet packet = ((NetworkSyncedItem)Item.ITEMS[itemStack.itemId]).getUpdatePacket(itemStack, world, this);
+
                 if (packet != null)
                 {
                     networkHandler.sendPacket(packet);
@@ -161,8 +163,10 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
             while (CanSendMoreChunkData() && PendingChunkUpdates.TryDequeue(out ChunkPos chunkPos))
             {
                 ServerWorld world = server.getWorld(dimensionId);
+
                 if (!activeChunks.Contains(chunkPos)) continue;
                 if (!world.chunkCache.GetChunk(chunkPos.X, chunkPos.Z).TerrainPopulated) continue;
+
                 SendChunkData(world, chunkPos);
                 SendBlockEntityUpdates(world, chunkPos);
             }
@@ -184,6 +188,7 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
                 else
                 {
                     changeDimensionCooldown += 0.0125F;
+
                     if (changeDimensionCooldown >= 1.0F)
                     {
                         changeDimensionCooldown = 1.0F;
@@ -240,6 +245,7 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
         int endZ = startZ + 16;
 
         var blockEntities = world.getBlockEntities(startX, 0, startZ, endX, 128, endZ);
+
         foreach (BlockEntity blockEntity in blockEntities)
         {
             updateBlockEntity(blockEntity);
@@ -251,6 +257,7 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
         if (blockentity != null)
         {
             Packet packet = blockentity.createUpdatePacket();
+
             if (packet != null)
             {
                 networkHandler.sendPacket(packet);
@@ -263,6 +270,7 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
         if (!item.dead)
         {
             EntityTracker et = server.getEntityTracker(dimensionId);
+
             if (item is EntityItem)
             {
                 et.sendToListeners(item, new ItemPickupAnimationS2CPacket(item.id, id));
@@ -292,6 +300,7 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
     public override SleepAttemptResult trySleep(int x, int y, int z)
     {
         SleepAttemptResult sleepAttemptResult = base.trySleep(x, y, z);
+
         if (sleepAttemptResult == SleepAttemptResult.OK)
         {
             EntityTracker et = server.getEntityTracker(dimensionId);
@@ -313,12 +322,12 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
         }
 
         base.wakeUp(resetSleepTimer, updateSleepingPlayers, setSpawnPos);
+
         if (networkHandler != null)
         {
             networkHandler.teleport(x, y, z, yaw, pitch);
         }
     }
-
 
     public override void setVehicle(Entity entity)
     {
@@ -326,7 +335,6 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
         networkHandler.sendPacket(new EntityVehicleSetS2CPacket(this, vehicle));
         networkHandler.teleport(x, y, z, yaw, pitch);
     }
-
 
     protected override void fall(double heightDifference, bool onGround)
     {
@@ -342,7 +350,6 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
         screenHandlerSyncId = screenHandlerSyncId % 100 + 1;
     }
 
-
     public override void openCraftingScreen(int x, int y, int z)
     {
         incrementScreenHandlerSyncId();
@@ -351,7 +358,6 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
         currentScreenHandler.syncId = screenHandlerSyncId;
         currentScreenHandler.addListener(this);
     }
-
 
     public override void openChestScreen(IInventory inventory)
     {
@@ -362,7 +368,6 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
         currentScreenHandler.addListener(this);
     }
 
-
     public override void openFurnaceScreen(BlockEntityFurnace furnace)
     {
         incrementScreenHandlerSyncId();
@@ -372,7 +377,6 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
         currentScreenHandler.addListener(this);
     }
 
-
     public override void openDispenserScreen(BlockEntityDispenser dispenser)
     {
         incrementScreenHandlerSyncId();
@@ -381,7 +385,6 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
         currentScreenHandler.syncId = screenHandlerSyncId;
         currentScreenHandler.addListener(this);
     }
-
 
     public void onSlotUpdate(ScreenHandler handler, int slot, ItemStack stack)
     {
@@ -398,7 +401,6 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
     {
         onContentsUpdate(screenHandler, screenHandler.getStacks());
     }
-
 
     public void onContentsUpdate(ScreenHandler handler, List stacks)
     {
@@ -444,7 +446,6 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
         this.pitch = pitch;
         this.yaw = yaw;
     }
-
 
     public override void increaseStat(StatBase stat, int amount)
     {
@@ -496,6 +497,6 @@ public class ServerPlayerEntity : EntityPlayer, ScreenHandlerListener
     public override void spawn()
     {
         //client only
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 }

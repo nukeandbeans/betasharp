@@ -1,124 +1,38 @@
-using java.io;
-using java.lang;
-using java.util;
+using BetaSharp.IO;
 using java.util.logging;
 using Exception = System.Exception;
+using File = System.IO.File;
 
 namespace BetaSharp.Server;
 
 internal class DedicatedServerConfiguration : IServerConfiguration
 {
-    public static Logger logger = Logger.getLogger("Minecraft");
-    private readonly Properties properties = new();
-    private readonly java.io.File propertiesFile;
+    public static readonly Logger logger = Logger.getLogger("Minecraft");
 
-    public DedicatedServerConfiguration(java.io.File file)
+    private readonly PropertiesFile _propertiesFile = new();
+    private readonly FileInfo _file;
+
+    public DedicatedServerConfiguration(FileInfo fileInfo)
     {
-        propertiesFile = file;
-        if (file.exists())
+        _file = fileInfo;
+
+        if (File.Exists(_file.FullName))
         {
             try
             {
-                properties.load(new FileInputStream(file));
+                _propertiesFile.Load(_file.OpenRead());
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                logger.log(Level.WARNING, "Failed to load " + file, (Throwable)ex);
-                generateNew();
+                logger.log(Level.WARNING, $"Failed to load {_file.FullName}", e);
+                Save();
             }
         }
         else
         {
-            logger.log(Level.WARNING, file + " does not exist");
-            generateNew();
+            logger.log(Level.WARNING, $"{_file.FullName} does not exist");
+            Save();
         }
-    }
-
-    public void generateNew()
-    {
-        logger.log(Level.INFO, "Generating new properties file");
-        save();
-    }
-
-    public void save()
-    {
-        Save();
-    }
-
-    public void Save()
-    {
-        try
-        {
-            properties.store(new FileOutputStream(propertiesFile), "Minecraft server properties");
-        }
-        catch (Exception ex)
-        {
-            logger.log(Level.WARNING, "Failed to save " + propertiesFile, ex);
-            generateNew();
-        }
-    }
-
-    public string getProperty(string property, string fallback)
-    {
-        return GetProperty(property, fallback);
-    }
-
-    public string GetProperty(string property, string fallback)
-    {
-        if (!properties.containsKey(property))
-        {
-            properties.setProperty(property, fallback);
-            save();
-        }
-
-        return properties.getProperty(property, fallback);
-    }
-
-    public int getProperty(string property, int fallback)
-    {
-        return GetProperty(property, fallback);
-    }
-
-    public int GetProperty(string property, int fallback)
-    {
-        try
-        {
-            return Integer.parseInt(getProperty(property, "" + fallback));
-        }
-        catch (Exception)
-        {
-            properties.setProperty(property, "" + fallback);
-            return fallback;
-        }
-    }
-
-    public bool getProperty(string property, bool fallback)
-    {
-        return GetProperty(property, fallback);
-    }
-
-    public bool GetProperty(string property, bool fallback)
-    {
-        try
-        {
-            return java.lang.Boolean.parseBoolean(getProperty(property, "" + fallback));
-        }
-        catch (Exception)
-        {
-            properties.setProperty(property, "" + fallback);
-            return fallback;
-        }
-    }
-
-    public void setProperty(string property, bool value)
-    {
-        SetProperty(property, value);
-    }
-
-    public void SetProperty(string property, bool value)
-    {
-        properties.setProperty(property, "" + value);
-        save();
     }
 
     public string GetServerIp(string fallback) => GetProperty("server-ip", fallback);
@@ -135,4 +49,65 @@ internal class DedicatedServerConfiguration : IServerConfiguration
     public int GetMaxPlayers(int fallback) => GetProperty("max-players", fallback);
     public int GetViewDistance(int fallback) => GetProperty("view-distance", fallback);
     public bool GetWhiteList(bool fallback) => GetProperty("white-list", fallback);
+
+    public void Save()
+    {
+        try
+        {
+            _propertiesFile.Clear();
+            _propertiesFile.SetProperty("level-name", "world");
+            _propertiesFile.SetProperty("allow-nether", true);
+            _propertiesFile.SetProperty("view-distance", 10);
+            _propertiesFile.SetProperty("spawn-monsters", true);
+            _propertiesFile.SetProperty("online-mode", true);
+            _propertiesFile.SetProperty("spawn-animals", true);
+            _propertiesFile.SetProperty("max-players", 20);
+            _propertiesFile.SetProperty("server-ip", string.Empty);
+            _propertiesFile.SetProperty("pvp", true);
+            _propertiesFile.SetProperty("level-seed", string.Empty);
+            _propertiesFile.SetProperty("server-port", 25565);
+            _propertiesFile.SetProperty("allow-flight", false);
+            _propertiesFile.SetProperty("white-list", false);
+            _propertiesFile.Store(new FileStream(_file.FullName, FileMode.Create), "Minecraft server properties");
+        }
+        catch (Exception e)
+        {
+            logger.log(Level.WARNING, $"Failed to save {_file.FullName}", e);
+        }
+    }
+
+    public bool GetProperty(string property, bool fallback)
+    {
+        return _propertiesFile.GetProperty(property, fallback);
+    }
+
+    public int GetProperty(string property, int fallback)
+    {
+        return _propertiesFile.GetProperty(property, fallback);
+    }
+
+    public string GetProperty(string property, string fallback)
+    {
+        return _propertiesFile.GetProperty(property, fallback);
+    }
+
+    public void SetProperty(string property, bool value)
+    {
+        _propertiesFile.SetProperty(property, value);
+    }
+
+    public void SetProperty(string property, string value)
+    {
+        _propertiesFile.SetProperty(property, value);
+    }
+
+    public void SetProperty(string property, int value)
+    {
+        _propertiesFile.SetProperty(property, value);
+    }
+
+    public void SetProperty(string property, float value)
+    {
+        _propertiesFile.SetProperty(property, value);
+    }
 }

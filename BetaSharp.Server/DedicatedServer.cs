@@ -24,6 +24,7 @@ internal class DedicatedServer(IServerConfiguration config) : MinecraftServer(co
         var1.start();
 
         s_logger.LogInformation("Starting minecraft server version Beta 1.7.3");
+
         if (Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L)
         {
             s_logger.LogWarning("**** NOT ENOUGH RAM!");
@@ -44,7 +45,7 @@ internal class DedicatedServer(IServerConfiguration config) : MinecraftServer(co
         }
 
         int port = config.GetServerPort(25565);
-        s_logger.LogInformation($"Starting Minecraft server on {(addressInput.Length == 0 ? "*" : addressInput)}:{port}");
+        s_logger.LogInformation("Starting Minecraft server on {AddressInput}:{Port}", addressInput.Length == 0 ? "*" : addressInput, port);
 
         try
         {
@@ -53,17 +54,18 @@ internal class DedicatedServer(IServerConfiguration config) : MinecraftServer(co
         catch (java.io.IOException ex)
         {
             s_logger.LogWarning("**** FAILED TO BIND TO PORT!");
-            s_logger.LogWarning($"The exception was: {ex}");
+            s_logger.LogWarning("The exception was: {Exception}", ex);
             s_logger.LogWarning("Perhaps a server is already running on that port?");
+
             return false;
         }
 
         if (!onlineMode)
         {
             s_logger.LogWarning("**** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!");
-            s_logger.LogWarning("The server will make no attempt to authenticate usernames. Beware.");
-            s_logger.LogWarning("While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.");
-            s_logger.LogWarning("To change this, set \"online-mode\" to \"true\" in the server.settings file.");
+            s_logger.LogWarning("The server will make no attempt to authenticate usernames. Beware");
+            s_logger.LogWarning("While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose");
+            s_logger.LogWarning("To change this, set \"online-mode\" to \"true\" in the server.settings file");
         }
 
         return base.Init();
@@ -75,19 +77,19 @@ internal class DedicatedServer(IServerConfiguration config) : MinecraftServer(co
 
         try
         {
-            DedicatedServerConfiguration config = new(new java.io.File("server.properties"));
             DedicatedServer server = new(config);
+            DedicatedServerConfiguration config = new( new FileInfo("server.properties") );
 
             new RunServerThread(server, "Server thread").start();
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            s_logger.LogError($"Failed to start the minecraft server: {e}");
+            s_logger.LogError("Failed to start the minecraft server: {Exception}", exception);
         }
     }
 
-    public override java.io.File getFile(string path)
+    public override FileInfo GetFile(string path)
     {
-        return new java.io.File(path);
+        return new FileInfo(path);
     }
 }
