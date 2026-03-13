@@ -8,40 +8,36 @@ namespace BetaSharp.Server;
 
 internal class DedicatedServerConfiguration : IServerConfiguration
 {
-    public static ILogger<DedicatedServerConfiguration> logger = Log.Instance.For<DedicatedServerConfiguration>();
-    private readonly Properties properties = new();
-    private readonly java.io.File propertiesFile;
+    public static readonly ILogger<DedicatedServerConfiguration> logger = Log.Instance.For<DedicatedServerConfiguration>();
+    private readonly Properties _properties = new();
+    private readonly java.io.File _propertiesFile;
 
     public DedicatedServerConfiguration(java.io.File file)
     {
-        propertiesFile = file;
+        _propertiesFile = file;
+
         if (file.exists())
         {
             try
             {
-                properties.load(new FileInputStream(file));
+                _properties.load(new FileInputStream(file));
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                logger.LogWarning(ex, "Failed to load " + file);
-                generateNew();
+                logger.LogWarning("Failed to load file: {@File}\n{Exception}", file, exception);
+                GenerateNew();
             }
         }
         else
         {
-            logger.LogWarning(file + " does not exist");
-            generateNew();
+            logger.LogWarning("{@File} does not exist", file);
+            GenerateNew();
         }
     }
 
-    public void generateNew()
+    public void GenerateNew()
     {
         logger.LogInformation("Generating new properties file");
-        save();
-    }
-
-    public void save()
-    {
         Save();
     }
 
@@ -49,76 +45,58 @@ internal class DedicatedServerConfiguration : IServerConfiguration
     {
         try
         {
-            properties.store(new FileOutputStream(propertiesFile), "BetaSharp server properties");
+            _properties.store(new FileOutputStream(_propertiesFile), "BetaSharp server properties");
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            logger.LogWarning(ex, "Failed to save " + propertiesFile);
-            generateNew();
+            logger.LogWarning("Failed to save property file: {@PropertiesFile}\n{Exception}", _propertiesFile, exception);
+            GenerateNew();
         }
-    }
-
-    public string getProperty(string property, string fallback)
-    {
-        return GetProperty(property, fallback);
     }
 
     public string GetProperty(string property, string fallback)
     {
-        if (!properties.containsKey(property))
+        if (!_properties.containsKey(property))
         {
-            properties.setProperty(property, fallback);
-            save();
+            _properties.setProperty(property, fallback);
+            Save();
         }
 
-        return properties.getProperty(property, fallback);
-    }
-
-    public int getProperty(string property, int fallback)
-    {
-        return GetProperty(property, fallback);
+        return _properties.getProperty(property, fallback);
     }
 
     public int GetProperty(string property, int fallback)
     {
         try
         {
-            return Integer.parseInt(getProperty(property, "" + fallback));
+            return Integer.parseInt(GetProperty(property, fallback.ToString()));
         }
         catch (Exception)
         {
-            properties.setProperty(property, "" + fallback);
+            _properties.setProperty(property, fallback.ToString());
+
             return fallback;
         }
-    }
-
-    public bool getProperty(string property, bool fallback)
-    {
-        return GetProperty(property, fallback);
     }
 
     public bool GetProperty(string property, bool fallback)
     {
         try
         {
-            return java.lang.Boolean.parseBoolean(getProperty(property, "" + fallback));
+            return java.lang.Boolean.parseBoolean(GetProperty(property, fallback.ToString()));
         }
         catch (Exception)
         {
-            properties.setProperty(property, "" + fallback);
+            _properties.setProperty(property, fallback.ToString());
+
             return fallback;
         }
     }
 
-    public void setProperty(string property, bool value)
-    {
-        SetProperty(property, value);
-    }
-
     public void SetProperty(string property, bool value)
     {
-        properties.setProperty(property, "" + value);
-        save();
+        _properties.setProperty(property, value.ToString());
+        Save();
     }
 
     public string GetServerIp(string fallback) => GetProperty("server-ip", fallback);

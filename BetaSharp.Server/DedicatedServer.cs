@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Sockets;
 using BetaSharp.Server.Network;
 using BetaSharp.Server.Threading;
 using java.lang;
@@ -19,11 +18,12 @@ internal class DedicatedServer(IServerConfiguration config) : BetaSharpServer(co
 
     protected override bool Init()
     {
-        ConsoleInputThread var1 = new(this);
-        var1.setDaemon(true);
-        var1.start();
+        ConsoleInputThread consoleInputThread = new( this );
+        consoleInputThread.setDaemon(true);
+        consoleInputThread.start();
 
         s_logger.LogInformation("Starting BetaSharp server version Beta 1.7.3");
+
         if (Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L)
         {
             s_logger.LogWarning("**** NOT ENOUGH RAM!");
@@ -36,7 +36,7 @@ internal class DedicatedServer(IServerConfiguration config) : BetaSharpServer(co
 
         bool dualStack = config.GetDualStack(false);
 
-        var address = dualStack ? IPAddress.IPv6Any : IPAddress.Any;
+        IPAddress address = dualStack ? IPAddress.IPv6Any : IPAddress.Any;
 
         if (addressInput.Length > 0)
         {
@@ -44,26 +44,31 @@ internal class DedicatedServer(IServerConfiguration config) : BetaSharpServer(co
         }
 
         int port = config.GetServerPort(25565);
-        s_logger.LogInformation($"Starting BetaSharp server on {(addressInput.Length == 0 ? "*" : addressInput)}:{port}");
+
+        if (s_logger.IsEnabled(LogLevel.Information))
+        {
+            s_logger.LogInformation("Starting BetaSharp server on {AddressInput}:{Port}", addressInput.Length == 0 ? "*" : addressInput, port);
+        }
 
         try
         {
             connections = new ConnectionListener(this, address, port, dualStack);
         }
-        catch (java.io.IOException ex)
+        catch (java.io.IOException exception)
         {
             s_logger.LogWarning("**** FAILED TO BIND TO PORT!");
-            s_logger.LogWarning($"The exception was: {ex}");
+            s_logger.LogWarning("The exception was: {Exception}", exception);
             s_logger.LogWarning("Perhaps a server is already running on that port?");
+
             return false;
         }
 
         if (!onlineMode)
         {
             s_logger.LogWarning("**** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!");
-            s_logger.LogWarning("The server will make no attempt to authenticate usernames. Beware.");
-            s_logger.LogWarning("While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.");
-            s_logger.LogWarning("To change this, set \"online-mode\" to \"true\" in the server.settings file.");
+            s_logger.LogWarning("The server will make no attempt to authenticate usernames. Beware");
+            s_logger.LogWarning("While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose");
+            s_logger.LogWarning("To change this, set \"online-mode\" to \"true\" in the server.settings file");
         }
 
         return base.Init();
@@ -76,14 +81,14 @@ internal class DedicatedServer(IServerConfiguration config) : BetaSharpServer(co
 
         try
         {
-            DedicatedServerConfiguration config = new(new java.io.File("server.properties"));
-            DedicatedServer server = new(config);
+            DedicatedServerConfiguration config = new( new java.io.File("server.properties") );
+            DedicatedServer server = new( config );
 
             new RunServerThread(server, "Server thread").start();
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            s_logger.LogError($"Failed to start the BetaSharp server: {e}");
+            s_logger.LogError("Failed to start the BetaSharp server: {Exception}", exception);
         }
     }
 
